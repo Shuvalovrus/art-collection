@@ -3,14 +3,20 @@
     "eslint:recommended",
     "react-app",
     "plugin:react/jsx-runtime",
-    "prettier"
+    "prettier",
+    "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": { "project": true, "tsconfigRootDir": "./" },
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "@conarti/feature-sliced"],
   "root": true,
   "ignorePatterns": ["dist"],
   "rules": {
+    "no-unused-expressions": "error",
+    "react/jsx-no-useless-fragment": "error",
+    "curly": ["error", "all"],
+    "no-console": "warn",
+    "prettier/prettier": "warn",
     "@typescript-eslint/consistent-type-imports": [
       2,
       { "fixStyle": "separate-type-imports" }
