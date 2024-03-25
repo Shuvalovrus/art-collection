@@ -8,7 +8,7 @@
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": { "project": true, "tsconfigRootDir": "./" },
-  "plugins": ["@typescript-eslint", "@conarti/feature-sliced"],
+  "plugins": ["@typescript-eslint"],
   "root": true,
   "ignorePatterns": ["dist"],
   "rules": {
