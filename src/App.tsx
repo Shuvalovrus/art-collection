@@ -1,10 +1,18 @@
+import { Layout } from "antd"
+import { Content } from "antd/es/layout/layout"
+import { Outlet, RouterProvider } from "react-router-dom"
+
 import "./App.css"
+import Header from "./components/Header/Header"
 
 const App = () => {
   return (
-    <div className="App">
-      <h1>Hello World!</h1>
-    </div>
+    <Layout className="container">
+      <Header />
+      <Content className="main">
+        <Outlet />
+      </Content>
+    </Layout>
   )
 }
 
