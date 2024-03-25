@@ -1,0 +1,90 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 20.11.0
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Run ESlint
+        run: npm run lint
+
+      - name: Run Prettier
+        run: npm run prettier:check
+
+  deploy-prod:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.action == 'closed'
+    needs: run-linters
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20.11.0
+
+      - name: 🔨 Build Project
+        run: |
+          npm install
+          npm run build
+
+      - name: 📂 Sync files
+        id: ftp-deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.HOST }}
+          username: ${{ secrets.HOST_USERNAME }}
+          password: ${{ secrets.HOST_PASSWORD }}
+          server-dir: "./www/shuvalov-tech-labs.ru/"
+          local-dir: "./dist/"
+
+  deploy-test-banch:
+    name: 🎉 Deploy on test banch
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    needs: run-linters
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20.11.0
+
+      - name: 🔨 Build Project
+        run: |
+          npm install
+          npm run build
+
+      - name: 📂 Sync files
+        id: ftp-deploy-pr
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.HOST }}
+          username: ${{ secrets.HOST_USERNAME }}
+          password: ${{ secrets.HOST_PASSWORD }}
+          server-dir: "./www/test-bench.shuvalov-tech-labs.ru/"
+          local-dir: "./dist/"
