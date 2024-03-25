@@ -34,7 +34,7 @@ const HomePage = () => {
 
       setCollection(prevCollection => [...prevCollection, ...filteredRecords])
     } catch (err) {
-      console.error("Error fetching data:", err.message)
+      console.error("Error fetching data:", err)
     }
   }
 
